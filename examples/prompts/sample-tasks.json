@@ -2,5 +2,9 @@
   {
     "name": "anthropic-recent-learnings",
     "prompt": "I want to see the recent learnings from anthropic, which website should I look for?"
+  },
+  {
+    "name": "anthropic-find-latest-blog",
+    "prompt": "Please find me the latest Anthropic blog by 4/8/2026, and write its full content in a MD file in ./.tmp."
   }
 ]
