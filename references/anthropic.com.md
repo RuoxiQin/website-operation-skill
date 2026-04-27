@@ -1,152 +1,71 @@
 # anthropic.com
 
-`anthropic.com` is the website of **Anthropic**, the company that created Claude. It's a rich source for LLM development tips, learning material, safety/interpretability research, and new product launches. Anthropic also runs several adjacent properties (Claude product site, alignment blog, interpretability site, GitHub) that are part of the same ecosystem — they're listed below because they're usually what you actually want when someone says "check Anthropic's site."
+Anthropic's website + adjacent official properties. Picking the wrong section is the most common reason agents fail to find Anthropic content that does exist. **Read the router first, then jump to the matching entry.**
 
-Use this map to pick the right section *before* you browse or search. Going to the wrong sub-section is the most common reason agents fail to find Anthropic content that does exist.
+## Router (intent → destination)
 
-## Mental model
+- "what did Anthropic discover / research / find" → `anthropic.com/research`
+- "how do they build agents / evals / Claude Code / MCP / harnesses" → `anthropic.com/engineering`
+- "new model / product launch / partnership / press announcement" → `anthropic.com/news`
+- "Claude product best practices, enterprise / agent patterns" → `claude.com/blog`
+- "what actually changed in the API / SDK / Console" → `platform.claude.com/docs/en/release-notes/overview`
+- "mechanistic interp, sparse autoencoders, features, circuits, model internals" → `transformer-circuits.pub`
+- "alignment auditing, sandbagging, model organisms, early safety notes" → `alignment.anthropic.com`
+- "AI labor impact, jobs, Anthropic Economic Index" → `anthropic.com/economic-futures`
+- "SDK source, cookbooks, official plugins / skills, code examples" → `github.com/anthropics`
 
-| Section | What it is | Best for |
-|---|---|---|
-| `anthropic.com/research` | Anthropic's research publication hub. Alignment, interpretability, societal impacts, frontier red-teaming, economic research, policy, science. | New research findings, safety papers, interpretability work, evaluation methods, AI impact studies. Start here for **"what did Anthropic discover?"** |
-| `anthropic.com/engineering` | Technical engineering blog about building reliable AI systems and agent infrastructure. | Agent design, evals, Claude Code, MCP / tool use, context engineering, harnesses, infrastructure lessons, postmortems. Start here for **"how do they build agents/systems?"** |
-| `anthropic.com/news` | Company newsroom: product launches, partnerships, announcements, press-facing updates. | Model releases, product announcements, policy announcements, partnerships. Less "researchy." |
+## Properties
 
-## Section details
+### anthropic.com/research
+- Content: Research publication hub. Subareas: Alignment, Interpretability, Societal Impacts, Frontier Red Team, Economic Research, Policy.
+- Use for: new findings, safety papers, jailbreak/red-team work, evaluation methods, AI impact studies.
+- Skip for: applied agent-building (→ engineering), product news (→ news), deep mechanistic interp (→ transformer-circuits.pub).
 
-### 1. anthropic.com/research
+### anthropic.com/engineering
+- Content: Engineering systems blog — building reliable AI systems. Recent topics: managed agents, Claude Code auto mode, long-running harnesses, agentic-coding eval noise, tool use, MCP, context engineering, postmortems.
+- Use for: how to build/evaluate agents, design tools for agents, harness patterns, infra tradeoffs, failure reports.
+- Skip for: product announcements (→ news), scientific findings (→ research).
+- Note: Usually the most practically useful section for LLM/agent developers.
 
-The closest thing to Anthropic's research blog / publication index. Teams investigate "the safety, inner workings, and societal impacts of AI models," divided into Alignment, Economic Research, Interpretability, Societal Impacts, and Frontier Red Team.
-
-Track here:
-
-- interpretability findings (emotion concepts, model internals, circuit tracing)
-- alignment and scalable oversight work
-- jailbreak, red-team, safety and classifier work
-- societal impact and economic-index studies
-- policy-adjacent technical research
-
-**Research = Anthropic's "new findings" layer.**
-
-### 2. anthropic.com/engineering
-
-Anthropic's engineering systems blog: "Engineering at Anthropic: Inside the team building reliable AI systems." Recent posts cover managed agents, Claude Code auto mode, long-running application harnesses, infrastructure noise in agentic coding evals, technical evaluations, tool use, MCP, context engineering, and agent best practices.
-
-For an LLM/agent developer, this is often the most practically useful section. Less "what did we discover scientifically?" and more:
-
-- how to build agent harnesses
-- how to evaluate agents
-- how to design tools for agents
-- how Claude Code is secured and improved
-- how Anthropic thinks about context engineering
-- failure reports and postmortems
-
-**Engineering = applied lessons for building LLM/agent systems.**
-
-### 3. anthropic.com/news
-
-The newsroom. Product launches, company announcements, partnerships, policy updates, press contact info.
-
-Read this for:
-
-- new Claude model releases
-- product launches
-- Anthropic partnerships
-- public policy / election / safety announcements
-- company-level strategic moves
-
-**News = official announcements, not technical depth.**
-
-## Adjacent official properties
-
-These are not on `anthropic.com` itself but are part of the same ecosystem and frequently the right destination.
+### anthropic.com/news
+- Content: Newsroom. Model releases, product launches, partnerships, policy/election/safety announcements.
+- Use for: official announcements only.
+- Skip for: technical depth (→ engineering or release notes).
 
 ### claude.com/blog
-
-The Claude product and best-practices blog: "Product news and best practices for teams building with Claude." Categories include Agents, Claude Code, Enterprise AI, Product announcements, Coding, Productivity, Work.
-
-Sits between News and Engineering — more practical than News, less research-heavy than Research. Useful for Claude Code, agents, enterprise workflows, MCP, productized agent patterns.
+- Content: Claude product + best-practices blog. Categories: Agents, Claude Code, Enterprise AI, Product announcements, Coding, Productivity, Work.
+- Use for: productized agent patterns, Claude Code workflows, enterprise rollouts, MCP from a product angle. Sits between News and Engineering.
+- Skip for: API changelog (→ release notes), academic findings (→ research).
 
 ### platform.claude.com/docs/en/release-notes/overview
-
-Claude Platform release notes. Covers API, SDK, Console, model deprecations, beta headers, managed agents, rate limits, and platform-level changes.
-
-Important because blog posts explain concepts but **release notes tell you what actually changed in the API**.
+- Content: Claude Platform release notes. API, SDK, Console, model deprecations, beta headers, managed agents, rate limits.
+- Use for: authoritative "what changed in the API" lookups.
+- Skip for: conceptual explanations or how-to (→ engineering / claude.com/blog).
 
 ### transformer-circuits.pub
-
-Anthropic's dedicated interpretability research site — "Anthropic's Interpretability Research." Mechanistic interpretability papers, notes, updates, interactive research articles.
-
-Use for:
-
-- mechanistic interpretability
-- sparse autoencoders
-- features
-- circuits
-- model internals
-- activation-level explanations
-
-More specialized and research-heavy than the main Research page.
+- Content: Dedicated interpretability research site. Mechanistic interp papers, research notes, interactive articles.
+- Use for: sparse autoencoders, features, circuits, activation-level explanations, model internals.
+- Skip for: alignment policy / red-team work (→ research or alignment.anthropic.com).
 
 ### alignment.anthropic.com
-
-Anthropic's Alignment Science Blog. Releases research notes and early findings that may not warrant a full publication but are still useful to researchers.
-
-Use for:
-
-- alignment auditing
-- sandbagging
-- weak-to-strong generalization
-- automated alignment researchers
-- hidden behaviors
-- model organisms
-- safety evaluations
-
-Probably the most important "hidden extra blog" beyond the main website.
+- Content: Alignment Science Blog. Research notes and early findings that don't warrant a full publication.
+- Use for: alignment auditing, sandbagging, weak-to-strong generalization, automated alignment researchers, hidden behaviors, model organisms, safety evaluations.
+- Skip for: production safety features (→ news / claude.com/blog).
+- Note: The most important "hidden extra blog" beyond the main site.
 
 ### anthropic.com/economic-futures
+- Content: Hub for AI economics + labor-impact research. Includes the Anthropic Economic Index.
+- Use for: how Claude is used across jobs, labor-market impact, adoption patterns, policy implications of AI deployment.
 
-Hub for Anthropic's AI economics and labor impact research. Supports research and policy development for AI's economic impacts; includes the Anthropic Economic Index.
+### github.com/anthropics
+- Content: Anthropic GitHub org. claude-code, SDKs, cookbooks, prompt-engineering tutorials, courses, skills, plugins.
+- Use for: SDK source / changelog, code examples and recipes, official plugins/skills, open-source eval or tooling projects.
+- Skip for: prose blog content (→ engineering / claude.com/blog).
 
-Use for:
+## Combined loops
 
-- how Claude is used across jobs
-- labor-market impact
-- AI adoption patterns
-- policy implications of AI deployment
+- Research loop: research → alignment.anthropic.com → transformer-circuits.pub → economic-futures
+- Build loop: engineering → claude.com/blog → release notes → github.com/anthropics
+- Release loop: news → claude.com/blog → release notes
 
-### Anthropic GitHub (github.com/anthropics)
-
-Anthropic's GitHub org. Includes claude-code, SDKs, cookbooks, prompt engineering tutorials, courses, skills, and plugins.
-
-Use for:
-
-- SDK changes
-- Claude Code changelogs
-- examples and recipes
-- official plugins / skills
-- open-source evaluation or tooling projects
-
-## Recommended reading workflow
-
-**For new research findings:**
-
-1. anthropic.com/research
-2. alignment.anthropic.com
-3. transformer-circuits.pub
-4. anthropic.com/economic-futures (if interested in AI labor/economics)
-
-**For agent-building practice:**
-
-1. anthropic.com/engineering
-2. claude.com/blog
-3. Claude Platform release notes
-4. Anthropic GitHub
-
-**For model/product changes:**
-
-1. anthropic.com/news
-2. claude.com/blog
-3. Claude Platform release notes
-
-Treat **Research + Engineering + Claude Platform release notes** as the core loop. Add the Alignment Science Blog and Transformer Circuits for the deeper safety/interpretability layer.
+**Core loop** = research + engineering + platform release notes. Add alignment + transformer-circuits for the deeper safety/interpretability layer.
