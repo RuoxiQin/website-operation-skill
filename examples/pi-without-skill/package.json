@@ -1,0 +1,16 @@
+{
+  "name": "pi-without-skill",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Pi agent with no skills loaded — control for the website-operation comparison",
+  "scripts": {
+    "start": "node --env-file-if-exists=../.env run.mjs",
+    "pi": "node --env-file-if-exists=../.env node_modules/@mariozechner/pi-coding-agent/dist/cli.js --no-skills"
+  },
+  "dependencies": {
+    "@mariozechner/pi-ai": "^0.70.2",
+    "@mariozechner/pi-coding-agent": "^0.70.2",
+    "playwright": "^1.50.0"
+  }
+}
