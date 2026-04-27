@@ -6,7 +6,7 @@
   "description": "Pi agent with no skills loaded — control for the website-operation comparison",
   "scripts": {
     "start": "node --env-file-if-exists=../.env run.mjs",
-    "pi": "node --env-file-if-exists=../.env node_modules/@mariozechner/pi-coding-agent/dist/cli.js --no-skills --model google/gemini-3-flash-preview"
+    "pi": "node --env-file-if-exists=../.env node_modules/@mariozechner/pi-coding-agent/dist/cli.js --no-skills --model google/gemini-3.1-pro-preview"
   },
   "dependencies": {
     "@mariozechner/pi-ai": "^0.70.2",
