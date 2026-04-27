@@ -1,6 +1,6 @@
 # pi-with-skill
 
-A pi agent that **does** load the `website-operation` skill from `.pi/skills/website-operation/SKILL.md` (a symlink to the top-level `SKILL.md`).
+A pi agent that **does** load the `website-operation` skill from `.pi/skills/website-operation/`. That directory symlinks `SKILL.md`, `scripts/`, and `references/` back to the top-level skill so edits flow through.
 
 ## CLI mode
 

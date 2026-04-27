@@ -1,110 +1,36 @@
 ---
 name: website-operation
-description: Operate a website through a real browser — navigate, fill forms, click, extract rendered content, capture screenshots. Use when the task involves interacting with a web UI (login flows, form submission, scraping JS-rendered content, multi-step workflows). Do NOT use for plain HTTP/REST API calls (use curl directly for those).
-allowed-tools: Bash
+description: Look up an indexed map of a website's structure before browsing or searching it. Use when a task involves reading, browsing, or searching a specific website (e.g. "find Anthropic's interpretability research", "check the Claude release notes") so you know which sub-domain or section to target. Skip this skill if the website you need is not indexed.
+allowed-tools: Bash, Read
 ---
 
-# Website operation playbook
+# Website operation
 
-Drive a real browser via **Playwright** (Node API) executed through `bash`. Real browsers handle JS, cookies, and dynamic DOM — `curl` can't.
+This skill ships a small index of websites whose structure has been mapped out for you. Before you spend time crawling, searching, or guessing URLs on a website, check whether it's indexed here — if it is, you get a reference doc that tells you exactly which section / sub-domain to read for which kind of question.
 
-## Setup
+## How to use
 
-Run each automation as one self-contained Node script — don't drive Playwright across multiple bash calls, you'll lose cookies and process state.
+1. Identify the **main domain** of the website you want to operate on. Use the bare apex domain only — e.g. `anthropic.com`, not `https://www.anthropic.com/research` or `research.anthropic.com`.
 
-Use `chromium.launchPersistentContext` (not `chromium.launch`): it keeps cookies and storage across navigations within the script, which any login flow or multi-step session needs.
+2. Run the check script with that domain:
 
-```js
-import { chromium } from 'playwright';
-import { mkdtempSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+   ```bash
+   bash scripts/check_domain.sh <domain>
+   ```
 
-const userDataDir = mkdtempSync(join(tmpdir(), 'pw-'));
-const ctx = await chromium.launchPersistentContext(userDataDir, { headless: true });
-const page = await ctx.newPage();
-try {
-  // ... your steps ...
-} finally {
-  await ctx.close();
-}
+   - If indexed, the script prints the path to the reference doc. **Read that file** before doing anything else with the site — it will tell you which sub-section to target.
+   - If not indexed, the script prints `not indexed` and exits non-zero. In that case this skill has nothing useful for the site; skip it and proceed with your usual browsing/search approach.
+
+3. Use the guidance in the reference doc to pick the right section, then browse / fetch / search as you normally would.
+
+## Example
+
+```bash
+$ bash scripts/check_domain.sh anthropic.com
+references/anthropic.com.md
+
+$ bash scripts/check_domain.sh example.com
+not indexed
 ```
 
-## Core rules
-
-1. **Wait for the right thing, not for time.** Use `await page.waitForSelector(sel)`, `await page.waitForLoadState('networkidle')`, or `await locator.waitFor()`. Never use `setTimeout` / `sleep` to "let the page load" — it's the #1 cause of flaky scripts.
-
-2. **Inspect before you act.** Before writing a selector, dump the relevant HTML and read it:
-   ```js
-   await page.locator('main').innerHTML().then(h => fs.writeFileSync('./.tmp/page.html', h));
-   ```
-   Then read `./.tmp/page.html` to find real selectors. Don't guess from memory — site markup changes.
-
-3. **Prefer role/label/text locators over CSS.** They survive markup changes and read like the UI:
-   ```js
-   await page.getByRole('button', { name: 'Sign in' }).click();
-   await page.getByLabel('Email').fill('user@example.com');
-   await page.getByText('Welcome back').waitFor();
-   ```
-   Fall back to CSS/XPath only when the accessible name isn't unique.
-
-4. **Screenshot meaningful steps.** Capture before+after for any state-changing action:
-   ```js
-   await page.screenshot({ path: './.tmp/before-submit.png', fullPage: true });
-   await page.getByRole('button', { name: 'Submit' }).click();
-   await page.waitForURL('**/success');
-   await page.screenshot({ path: './.tmp/after-submit.png', fullPage: true });
-   ```
-   Screenshots help you (and the user) verify what actually happened, and let you self-correct when a step silently fails.
-
-5. **Extract structured data, not blobs.** Use `locator.evaluateAll(...)` to map DOM nodes to plain objects, then `JSON.stringify` the result. Avoid dumping `page.content()` as your final answer.
-
-   ```js
-   const stories = await page.locator('.story').evaluateAll(rows =>
-     rows.map(r => ({
-       title: r.querySelector('.title')?.textContent?.trim(),
-       href: r.querySelector('a')?.href,
-     })),
-   );
-   ```
-
-## Auth flows
-
-When a task spans login + later actions, save and reuse storage state:
-
-```js
-// First run: log in, then save state
-await page.getByLabel('Email').fill(email);
-await page.getByLabel('Password').fill(password);
-await page.getByRole('button', { name: 'Sign in' }).click();
-await page.waitForURL('**/dashboard');
-await ctx.storageState({ path: './.tmp/auth.json' });
-```
-
-```js
-// Later runs: reuse state, skip login entirely
-const ctx = await chromium.launchPersistentContext(userDataDir, {
-  headless: true,
-  storageState: './.tmp/auth.json',
-});
-```
-
-Never put real credentials in scripts you echo back to the user. Read them from env vars.
-
-## Failure recovery
-
-When a selector times out:
-1. Take a screenshot — `await page.screenshot({ path: './.tmp/fail.png', fullPage: true })`.
-2. Dump current URL and title — `console.log(page.url(), await page.title())`.
-3. Dump the HTML around where you expected the element.
-4. Read the screenshot/HTML, fix the selector, re-run. Don't just bump the timeout.
-
-If the page shows a captcha, cookie banner, or unexpected modal — handle it explicitly. Don't pretend it isn't there.
-
-## Headless vs. headed
-
-Default to `headless: true`. Switch to `headless: false` only when the user is running locally and asks to watch, or when debugging a flow that behaves differently in headless mode (rare, but happens with media/auth).
-
-## Cleanup
-
-Always `await ctx.close()` in a `finally` block. Tmp dirs from `mkdtempSync` are fine to leave — the OS cleans them up — but close the browser process or you'll leak chromium instances.
+When indexed, follow up by reading the printed reference file.
