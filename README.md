@@ -21,3 +21,13 @@ An LLM **skill** that teaches an agent to operate a website through a real brows
 git clone <this-repo> && cd website-operation-skill
 cd examples && cat README.md   # follow the harness instructions
 ```
+
+## Install as a skill
+
+If you just want the skill (not the comparison harness), install it directly into your agent's skills directory:
+
+```bash
+npx skills add RuoxiQin/website-operation-skill
+```
+
+This uses the [`vercel-labs/skills`](https://github.com/vercel-labs/skills) CLI, which discovers `SKILL.md` and copies the skill into `.agents/skills/` (or the appropriate per-agent directory). Works with Claude Code, Cursor, opencode, and other agents that follow the agentskills.io standard.
