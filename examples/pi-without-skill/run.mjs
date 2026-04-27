@@ -15,10 +15,17 @@ import { getModel } from '@mariozechner/pi-ai';
 const here = dirname(fileURLToPath(import.meta.url));
 const cwd = here;
 
-const promptPath = process.argv[2]
-  ? resolve(process.cwd(), process.argv[2])
-  : resolve(here, '../prompts/sample-task.txt');
-const prompt = readFileSync(promptPath, 'utf8').trim();
+const promptsPath = resolve(here, '../prompts/sample-tasks.json');
+const prompts = JSON.parse(readFileSync(promptsPath, 'utf8'));
+const requestedName = process.argv[2];
+const selected = requestedName
+  ? prompts.find(p => p.name === requestedName)
+  : prompts[0];
+if (!selected) {
+  const available = prompts.map(p => p.name).join(', ');
+  throw new Error(`Prompt "${requestedName}" not found in ${promptsPath}. Available: ${available}`);
+}
+const prompt = selected.prompt;
 
 const modelId = process.env.MODEL ?? 'gemini-2.5-pro';
 const model = getModel('google', modelId);
@@ -49,7 +56,7 @@ const loadedContext = resourceLoader.getAgentsFiles().agentsFiles;
 console.error(`[pi-without-skill] loaded skills:        ${loadedSkills.map(s => s.name).join(', ') || '(none)'}`);
 console.error(`[pi-without-skill] loaded context files: ${loadedContext.map(f => f.path).join(', ') || '(none)'}`);
 console.error(`[pi-without-skill] model:                google/${modelId}`);
-console.error(`[pi-without-skill] prompt:               ${promptPath}`);
+console.error(`[pi-without-skill] prompt:               ${promptsPath} (${selected.name})`);
 console.error('---');
 
 const { session } = await createAgentSession({

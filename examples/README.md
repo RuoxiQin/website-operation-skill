@@ -7,7 +7,7 @@ Two pi-agent setups, identical except for one variable: whether the [`website-op
 | [pi-with-skill/](pi-with-skill/)           | yes           | The treatment — agent gets the playbook     |
 | [pi-without-skill/](pi-without-skill/)     | no            | The control — same model, same tools, no playbook |
 
-Both run the same prompt from [prompts/sample-task.txt](prompts/sample-task.txt). The skill is a single source of truth: `pi-with-skill/.pi/skills/website-operation/` symlinks `SKILL.md`, `scripts/`, and `references/` back to the repo root, so editing the originals updates what the agent sees.
+Both run the same prompt from [prompts/sample-tasks.json](prompts/sample-tasks.json) — a list of `{ name, prompt }` entries. By default the runners pick the first entry; pass a name to select a specific one (e.g. `npm start -- anthropic-recent-learnings`). The skill is a single source of truth: `pi-with-skill/.pi/skills/website-operation/` symlinks `SKILL.md`, `scripts/`, and `references/` back to the repo root, so editing the originals updates what the agent sees.
 
 Both agents also load [`AGENTS.md`](AGENTS.md) — environment facts (use the project's local `node_modules/`, write scripts in cwd, etc.) that aren't part of the variable being compared. Pi auto-discovers `AGENTS.md` by walking up from cwd.
 
@@ -33,7 +33,7 @@ Open two terminals:
 cd examples/pi-with-skill
 npm run pi                 # auto-loads ../.env
 # inside pi: type /skills to confirm "website-operation" is listed,
-# then paste the contents of ../prompts/sample-task.txt
+# then paste the prompt of your choice from ../prompts/sample-tasks.json
 ```
 
 ```bash
@@ -81,6 +81,6 @@ Without the skill, common failure modes:
 
 ## Customizing
 
-- **Different prompt**: drop a file in `prompts/` and pass its path: `npm start -- ../prompts/my-task.txt`
+- **Different prompt**: add a `{ name, prompt }` entry to [prompts/sample-tasks.json](prompts/sample-tasks.json) and select it by name: `npm start -- my-task-name`
 - **Different model**: `MODEL=gemini-2.5-flash npm start` (use the same model in both runs; default is `gemini-2.5-pro`)
 - **Edit the skill**: edit `../SKILL.md`, `../scripts/`, or `../references/` — the with-skill agent picks up the change on next run, since the project skill directory symlinks all three

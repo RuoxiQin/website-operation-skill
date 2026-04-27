@@ -9,7 +9,7 @@ A pi agent that **does** load the `website-operation` skill from `.pi/skills/web
 npm run pi
 ```
 
-`npm run pi` launches the locally-installed pi with `examples/.env` auto-loaded (via Node's `--env-file-if-exists` flag). Pi discovers the skill at `.pi/skills/website-operation/` automatically — confirm with `/skills` inside pi, then paste the contents of `../prompts/sample-task.txt` as your first message.
+`npm run pi` launches the locally-installed pi with `examples/.env` auto-loaded (via Node's `--env-file-if-exists` flag). Pi discovers the skill at `.pi/skills/website-operation/` automatically — confirm with `/skills` inside pi, then paste a prompt of your choice from `../prompts/sample-tasks.json` as your first message.
 
 > If you run `npx pi` directly, your `.env` is NOT loaded. Either use `npm run pi`, or `export GEMINI_API_KEY=...` in the shell first.
 
@@ -19,8 +19,8 @@ npm run pi
 npm install
 npx playwright install chromium       # one-time, ~120MB
 # put GEMINI_API_KEY in examples/.env (see ../.env.example) — npm start auto-loads it
-npm start                              # runs ../prompts/sample-task.txt
-npm start -- ./my-prompt.txt           # or pass a custom prompt file
+npm start                              # runs the first prompt in ../prompts/sample-tasks.json
+npm start -- anthropic-recent-learnings  # or pick a specific prompt by name
 ```
 
 Override the model with `MODEL=gemini-2.5-flash npm start` (default: `gemini-2.5-pro`), or set `MODEL=...` in `.env`.

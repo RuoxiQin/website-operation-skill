@@ -1,7 +1,0 @@
-Go to https://news.ycombinator.com, find the top story on the front page, click into its comments page, and report:
-
-1. The story title and the submitter
-2. The first three top-level comments (commenter + first ~150 chars of each)
-3. Save a full-page screenshot of the comments page to ./hn-comments.png
-
-Return the data as JSON. Do not summarize or paraphrase the comments — quote them.

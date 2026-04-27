@@ -19,7 +19,8 @@ npm run pi
 npm install
 npx playwright install chromium       # one-time, ~120MB
 # put GEMINI_API_KEY in examples/.env (see ../.env.example) — npm start auto-loads it
-npm start                              # runs ../prompts/sample-task.txt
+npm start                              # runs the first prompt in ../prompts/sample-tasks.json
+npm start -- anthropic-recent-learnings  # or pick a specific prompt by name
 ```
 
 The SDK runner explicitly passes `noSkills: true` to `DefaultResourceLoader`, so it doesn't matter whether `.pi/skills/` exists in this directory.
