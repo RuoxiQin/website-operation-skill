@@ -9,6 +9,8 @@ Two pi-agent setups, identical except for one variable: whether the [`website-op
 
 Both run the same prompt from [prompts/sample-task.txt](prompts/sample-task.txt). The skill is a single source of truth: `pi-with-skill/.pi/skills/website-operation/SKILL.md` is a symlink to the top-level [`SKILL.md`](../SKILL.md).
 
+Both agents also load [`AGENTS.md`](AGENTS.md) — environment facts (use the project's local `node_modules/`, write scripts in cwd, etc.) that aren't part of the variable being compared. Pi auto-discovers `AGENTS.md` by walking up from cwd.
+
 ## One-time setup
 
 ```bash

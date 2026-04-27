@@ -36,14 +36,17 @@ const resourceLoader = new DefaultResourceLoader({
   noExtensions: true,
   noPromptTemplates: true,
   noThemes: true,
-  noContextFiles: true,
+  // noContextFiles intentionally NOT set — we want pi to load examples/AGENTS.md
+  // (project-level environment context that applies to BOTH with-skill and without-skill).
 });
 await resourceLoader.reload();
 
 const loadedSkills = resourceLoader.getSkills().skills;
-console.error(`[pi-with-skill] loaded skills: ${loadedSkills.map(s => s.name).join(', ') || '(none)'}`);
-console.error(`[pi-with-skill] model: google/${modelId}`);
-console.error(`[pi-with-skill] prompt: ${promptPath}`);
+const loadedContext = resourceLoader.getAgentsFiles().agentsFiles;
+console.error(`[pi-with-skill] loaded skills:        ${loadedSkills.map(s => s.name).join(', ') || '(none)'}`);
+console.error(`[pi-with-skill] loaded context files: ${loadedContext.map(f => f.path).join(', ') || '(none)'}`);
+console.error(`[pi-with-skill] model:                google/${modelId}`);
+console.error(`[pi-with-skill] prompt:               ${promptPath}`);
 console.error('---');
 
 const { session } = await createAgentSession({

@@ -31,6 +31,8 @@ const modelRegistry = ModelRegistry.create(authStorage, join(agentDir, 'models.j
 const settingsManager = SettingsManager.create(cwd, agentDir);
 // noSkills: true blocks BOTH project-local (.pi/skills/) and global (~/.pi/agent/skills/)
 // discovery, so the comparison is clean even if the user has personal skills installed.
+// noContextFiles is intentionally NOT set — both agents should still load examples/AGENTS.md
+// (environment facts that aren't part of the with-skill vs without-skill variable).
 const resourceLoader = new DefaultResourceLoader({
   cwd,
   agentDir,
@@ -39,14 +41,15 @@ const resourceLoader = new DefaultResourceLoader({
   noExtensions: true,
   noPromptTemplates: true,
   noThemes: true,
-  noContextFiles: true,
 });
 await resourceLoader.reload();
 
 const loadedSkills = resourceLoader.getSkills().skills;
-console.error(`[pi-without-skill] loaded skills: ${loadedSkills.map(s => s.name).join(', ') || '(none)'}`);
-console.error(`[pi-without-skill] model: google/${modelId}`);
-console.error(`[pi-without-skill] prompt: ${promptPath}`);
+const loadedContext = resourceLoader.getAgentsFiles().agentsFiles;
+console.error(`[pi-without-skill] loaded skills:        ${loadedSkills.map(s => s.name).join(', ') || '(none)'}`);
+console.error(`[pi-without-skill] loaded context files: ${loadedContext.map(f => f.path).join(', ') || '(none)'}`);
+console.error(`[pi-without-skill] model:                google/${modelId}`);
+console.error(`[pi-without-skill] prompt:               ${promptPath}`);
 console.error('---');
 
 const { session } = await createAgentSession({

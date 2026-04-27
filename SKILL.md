@@ -10,12 +10,11 @@ Drive a real browser via **Playwright** (Node API) executed through `bash`. Real
 
 ## Setup
 
-Assume `playwright` is installed and `chromium` is available (`npx playwright install chromium`). If a script fails with a missing-browser error, install once and retry.
+Run each automation as one self-contained Node script — don't drive Playwright across multiple bash calls, you'll lose cookies and process state.
 
-Write each automation as a single self-contained Node script in a tmp file, then run it. This keeps state (cookies, console output) in one process. Don't try to drive Playwright across multiple bash calls.
+Use `chromium.launchPersistentContext` (not `chromium.launch`): it keeps cookies and storage across navigations within the script, which any login flow or multi-step session needs.
 
 ```js
-// /tmp/run.mjs
 import { chromium } from 'playwright';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -31,17 +30,15 @@ try {
 }
 ```
 
-`launchPersistentContext` keeps cookies and storage across navigations within the script — needed for any flow that crosses a login or relies on session state.
-
 ## Core rules
 
 1. **Wait for the right thing, not for time.** Use `await page.waitForSelector(sel)`, `await page.waitForLoadState('networkidle')`, or `await locator.waitFor()`. Never use `setTimeout` / `sleep` to "let the page load" — it's the #1 cause of flaky scripts.
 
 2. **Inspect before you act.** Before writing a selector, dump the relevant HTML and read it:
    ```js
-   await page.locator('main').innerHTML().then(h => fs.writeFileSync('/tmp/page.html', h));
+   await page.locator('main').innerHTML().then(h => fs.writeFileSync('./.tmp/page.html', h));
    ```
-   Then read `/tmp/page.html` to find real selectors. Don't guess from memory — site markup changes.
+   Then read `./.tmp/page.html` to find real selectors. Don't guess from memory — site markup changes.
 
 3. **Prefer role/label/text locators over CSS.** They survive markup changes and read like the UI:
    ```js
@@ -53,10 +50,10 @@ try {
 
 4. **Screenshot meaningful steps.** Capture before+after for any state-changing action:
    ```js
-   await page.screenshot({ path: '/tmp/before-submit.png', fullPage: true });
+   await page.screenshot({ path: './.tmp/before-submit.png', fullPage: true });
    await page.getByRole('button', { name: 'Submit' }).click();
    await page.waitForURL('**/success');
-   await page.screenshot({ path: '/tmp/after-submit.png', fullPage: true });
+   await page.screenshot({ path: './.tmp/after-submit.png', fullPage: true });
    ```
    Screenshots help you (and the user) verify what actually happened, and let you self-correct when a step silently fails.
 
@@ -81,14 +78,14 @@ await page.getByLabel('Email').fill(email);
 await page.getByLabel('Password').fill(password);
 await page.getByRole('button', { name: 'Sign in' }).click();
 await page.waitForURL('**/dashboard');
-await ctx.storageState({ path: '/tmp/auth.json' });
+await ctx.storageState({ path: './.tmp/auth.json' });
 ```
 
 ```js
 // Later runs: reuse state, skip login entirely
 const ctx = await chromium.launchPersistentContext(userDataDir, {
   headless: true,
-  storageState: '/tmp/auth.json',
+  storageState: './.tmp/auth.json',
 });
 ```
 
@@ -97,7 +94,7 @@ Never put real credentials in scripts you echo back to the user. Read them from 
 ## Failure recovery
 
 When a selector times out:
-1. Take a screenshot — `await page.screenshot({ path: '/tmp/fail.png', fullPage: true })`.
+1. Take a screenshot — `await page.screenshot({ path: './.tmp/fail.png', fullPage: true })`.
 2. Dump current URL and title — `console.log(page.url(), await page.title())`.
 3. Dump the HTML around where you expected the element.
 4. Read the screenshot/HTML, fix the selector, re-run. Don't just bump the timeout.
