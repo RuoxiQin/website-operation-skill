@@ -1,33 +1,51 @@
 # website-operation-skill
 
-An LLM **skill** that teaches an agent to operate a website through a real browser — navigate, fill forms, click, extract rendered content, capture screenshots — plus a side-by-side comparison harness that demonstrates the difference the skill makes.
+A skill that gives your agents a pre-built map of indexed websites so they can navigate and operate those sites faster and more accurately — no blind crawling, no URL guessing.
 
-## What's here
+## Quick Install
 
-- [`SKILL.md`](SKILL.md) — the skill itself. A short Playwright playbook the agent follows when handed a browser-automation task.
-- [`examples/`](examples/) — two pi-agent setups (`pi-with-skill`, `pi-without-skill`) configured to run the same prompt against the same model with only the skill toggled. See [examples/README.md](examples/README.md) for how to run the comparison.
+```bash
+npx skills install RuoxiQin/website-operation-skill
+```
+
+Or to install for specific agents:
+
+**Claude Code**:
+
+```bash
+mkdir -p ~/.claude/skills && cd ~/.claude/skills && git clone https://github.com/RuoxiQin/website-operation-skill website-operation
+```
+
+**pi** (per-project):
+
+```bash
+mkdir -p .pi/skills && cd .pi/skills && git clone https://github.com/RuoxiQin/website-operation-skill website-operation
+```
 
 ## Skill format
 
-`SKILL.md` follows the [agentskills.io](https://agentskills.io) open standard, which means the same file works in:
+`SKILL.md` follows the [agentskills.io](https://agentskills.io) open standard. The frontmatter declares the skill's name, description (used by the agent to decide when to invoke it), and which tools are allowed:
 
-- **[pi](https://pi.dev/docs/latest)** — drop into `<cwd>/.pi/skills/website-operation/SKILL.md` (pi can be installed locally per-project; no global install required)
-- **[Claude Code](https://docs.claude.com/en/docs/claude-code/skills)** — drop into `~/.claude/skills/website-operation/SKILL.md` or `.claude/skills/website-operation/SKILL.md`
-- Any other tool that implements the standard
-
-## Quick start
-
-```bash
-git clone <this-repo> && cd website-operation-skill
-cd examples && cat README.md   # follow the harness instructions
+```yaml
+---
+name: website-operation
+description: Look up an indexed map of a website's structure before browsing or searching it. ...
+allowed-tools: Bash, Read
+---
 ```
 
-## Install as a skill
+The body is a plain Markdown playbook the agent follows:
 
-If you just want the skill (not the comparison harness), install it directly into your agent's skills directory:
+1. **Identify** the apex domain of the target site (e.g. `anthropic.com`).
+2. **Run** `bash scripts/check_domain.sh <domain>` — prints the path to the reference doc if indexed, or `not indexed` if not.
+3. **Read** the reference doc before doing anything with the site. It maps sub-domains, sections, and URL patterns so the agent targets the right place immediately.
 
-```bash
-npx skills add RuoxiQin/website-operation-skill
-```
+### Adding a new website
 
-This uses the [`vercel-labs/skills`](https://github.com/vercel-labs/skills) CLI, which discovers `SKILL.md` and copies the skill into `.agents/skills/` (or the appropriate per-agent directory). Works with Claude Code, Cursor, opencode, and other agents that follow the agentskills.io standard.
+Drop a Markdown file into [`references/`](references/) named `<domain>.md` (e.g. `references/openai.com.md`). The check script discovers it automatically — no other changes needed. The reference doc should describe the site's structure: which sub-domains exist, what each section contains, and any URL patterns worth knowing.
+
+## Comparison harness
+
+The [`examples/`](examples/) directory contains a side-by-side test harness — two identical pi-agent setups where the only variable is whether the skill is loaded. It exists for **demonstration and evaluation purposes only**; it is not part of the skill itself.
+
+See [examples/README.md](examples/README.md) for setup and run instructions.
