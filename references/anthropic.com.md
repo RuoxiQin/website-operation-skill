@@ -32,6 +32,7 @@ Anthropic's website + adjacent official properties. Picking the wrong section is
 - Use for: how to build/evaluate agents, design tools for agents, harness patterns, infra tradeoffs, failure reports.
 - Skip for: product announcements (→ news), scientific findings (→ research).
 - Note: Usually the most practically useful section for LLM/agent developers.
+- Tooling: A dedicated scraping script is available for this section. Run `python3 scripts/anthropic.engineering.py [output_path]` (requires `beautifulsoup4` and `markdownify`) to fetch and convert the engineering blog into a clean markdown file with absolute URLs and fixed formatting.
 
 ### anthropic.com/news
 - Content: Newsroom. 
