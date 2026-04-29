@@ -62,6 +62,7 @@ Anthropic's website + adjacent official properties. Picking the wrong section is
 - Navigation: Sidebar contains detailed version history and sub-sections for different services.
 - Use for: authoritative "what changed in the API" lookups.
 - Skip for: conceptual explanations or how-to (→ engineering / claude.com/blog).
+- Tooling: A dedicated scraping script is available. Run `python3 scripts/claude.release-notes.py [output_path]` (requires `beautifulsoup4` and `markdownify`) to fetch and convert the release notes into a clean markdown file with properly structured headers and absolute URLs.
 
 ### transformer-circuits.pub
 - Content: Dedicated interpretability research site. 
@@ -69,6 +70,7 @@ Anthropic's website + adjacent official properties. Picking the wrong section is
 - Date Format: Grouped by month/year headers (e.g., `APRIL 2026`).
 - Use for: sparse autoencoders, features, circuits, activation-level explanations, model internals.
 - Skip for: alignment policy / red-team work (→ research or alignment.anthropic.com).
+- Tooling: A dedicated scraping script is available. Run `python3 scripts/transformer-circuits.py [output_path]` (requires `beautifulsoup4`) to fetch and convert the interpretability research hub into a clean markdown file with properly structured headers and absolute URLs.
 
 ### alignment.anthropic.com
 - Content: Alignment Science Blog. Research notes and early findings that don't warrant a full publication.
@@ -76,12 +78,14 @@ Anthropic's website + adjacent official properties. Picking the wrong section is
 - Use for: alignment auditing, sandbagging, weak-to-strong generalization, automated alignment researchers, hidden behaviors, model organisms, safety evaluations.
 - Skip for: production safety features (→ news / claude.com/blog).
 - Note: The most important "hidden extra blog" beyond the main site.
+- Tooling: A dedicated scraping script is available. Run `python3 scripts/alignment.anthropic.py [output_path]` (requires `beautifulsoup4`) to fetch and convert the alignment research hub into a clean markdown file with properly structured headers and absolute URLs.
 
 ### anthropic.com/economic-futures
 - Content: Hub for AI economics + labor-impact research. Includes the Anthropic Economic Index.
 - Structure: Latest updates are often displayed in a table with columns: `DATE`, `CATEGORY`, `TITLE`.
 - Date Format: `MMM DD, YYYY` (e.g., `Jan 15, 2026`).
 - Use for: how Claude is used across jobs, labor-market impact, adoption patterns, policy implications of AI deployment.
+- Tooling: A dedicated scraping script is available. Run `python3 scripts/anthropic.economic-futures.py [output_path]` (requires `beautifulsoup4` and `markdownify`) to fetch and convert the economic futures hub into a clean markdown file with properly structured headers and absolute URLs.
 
 ### github.com/anthropics
 - Content: Anthropic GitHub org. 
