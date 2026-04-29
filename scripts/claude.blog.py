@@ -31,31 +31,38 @@ def main():
     url = f"{base_url}/blog"
     output_path = sys.argv[1] if len(sys.argv) > 1 else ".tmp/claude_blog.md"
     
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    
     try:
-        print(f"Fetching {url}...")
-        with urllib.request.urlopen(req) as response:
-            html = response.read().decode('utf-8')
-            
-        print("Extracting blog metadata and posts...")
-        soup = BeautifulSoup(html, "html.parser")
-        
-        # Extract blog items
-        items = soup.find_all('div', class_='blog_cms_item')
-        
-        # Extract category links
-        cat_links = []
-        for cat in soup.find_all('a', href=lambda href: href and '/blog/category/' in href):
-            cat_links.append((cat.text.strip(), urljoin(base_url, cat.get('href'))))
-            
-        # De-duplicate category links while preserving order
+        current_url = url
+        items = []
         unique_cats = []
         seen_cats = set()
-        for cat in cat_links:
-            if cat[1] not in seen_cats and cat[0]:
-                seen_cats.add(cat[1])
-                unique_cats.append(cat)
+        
+        while current_url:
+            print(f"Fetching {current_url}...")
+            req = urllib.request.Request(current_url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as response:
+                html = response.read().decode('utf-8')
+                
+            soup = BeautifulSoup(html, "html.parser")
+            
+            # Extract blog items and add to our cumulative list
+            items.extend(soup.find_all('div', class_='blog_cms_item'))
+            
+            # Extract category links (only needed from the first page, but deduped anyway)
+            for cat in soup.find_all('a', href=lambda href: href and '/blog/category/' in href):
+                name, link = cat.text.strip(), urljoin(base_url, cat.get('href'))
+                if link not in seen_cats and name:
+                    seen_cats.add(link)
+                    unique_cats.append((name, link))
+                    
+            # Check for the "View more" next page link
+            next_button = soup.find('a', class_='w-pagination-next')
+            if next_button and next_button.get('href'):
+                current_url = urljoin(url, next_button.get('href'))
+            else:
+                current_url = None
+                
+        print("Extracting blog metadata and posts...")
                 
         # Build the final markdown string
         markdown = "# Claude Blog\n\nProduct news and best practices for teams building with Claude.\n\n"

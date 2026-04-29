@@ -6,3 +6,5 @@ node_modules/
 *.log
 hn-comments.png
 .tmp/
+
+.DS_Store
