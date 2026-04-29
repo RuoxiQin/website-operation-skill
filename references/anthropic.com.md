@@ -23,6 +23,7 @@ Anthropic's website + adjacent official properties. Picking the wrong section is
 - Navigation: Use "See more" links at the bottom of each section to load older papers.
 - Use for: new findings, safety papers, jailbreak/red-team work, evaluation methods, AI impact studies.
 - Skip for: applied agent-building (→ engineering), product news (→ news), deep mechanistic interp (→ transformer-circuits.pub).
+- Tooling: A dedicated scraping script is available. Run `python3 scripts/anthropic.research.py [output_path]` (requires `beautifulsoup4` and `markdownify`) to fetch and convert the research hub into a clean markdown file with properly structured headers and absolute URLs.
 
 ### anthropic.com/engineering
 - Content: Engineering systems blog — building reliable AI systems. 
@@ -40,6 +41,7 @@ Anthropic's website + adjacent official properties. Picking the wrong section is
 - Date Format: `MMM D, YYYY` (e.g., `Apr 7, 2026`). Single-digit days are NOT zero-padded.
 - Use for: official announcements, model releases, product launches, partnerships, policy/election/safety announcements.
 - Skip for: technical depth (→ engineering or release notes).
+- Tooling: A dedicated scraping script is available. Run `python3 scripts/anthropic.news.py [output_path]` (requires `beautifulsoup4` and `markdownify`) to fetch and convert the newsroom into a clean markdown file with properly structured headers and absolute URLs.
 
 ### claude.com/blog
 - Content: Claude product + best-practices blog. 
@@ -47,11 +49,12 @@ Anthropic's website + adjacent official properties. Picking the wrong section is
   - **Category**: Agents, Claude Code, Enterprise AI, Product announcements.
   - **Product**: Claude Enterprise, Claude apps, Claude Platform, Claude Code.
   - **Use case**: Agents, Business, Coding, Content Creation, Design, Education, Financial services, Government, Healthcare, Learning, Legal, Productivity, Sales, Work.
-- Date Format: Typically uses `MMM DD, YYYY` (e.g., `Apr 08, 2026`).
+- Date Format: Typically uses `MMM DD, YYYY` (e.g., `Apr 08, 2026`) but can use full month names `Month DD, YYYY` (e.g., `April 28, 2026`).
 - Navigation: Features a "Filter and sort" accordion for drilling down by Category, Product, or Use Case. 
 - Pagination: Uses a "Next" button/link for more content. Some sections may have a "View more" link.
 - Use for: productized agent patterns, Claude Code workflows, enterprise rollouts, MCP from a product angle. Sits between News and Engineering.
 - Skip for: API changelog (→ release notes), academic findings (→ research).
+- Tooling: A dedicated scraping script is available. Run `python3 scripts/claude.blog.py [output_path]` (requires `beautifulsoup4`) to parse through the marketing layout and emit a clean, de-duplicated markdown index of posts.
 
 ### platform.claude.com/docs/en/release-notes/overview
 - Content: Claude Platform release notes. 

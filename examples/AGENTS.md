@@ -20,10 +20,10 @@ The user has deliberately opted out of global npm installs. Each example directo
 
 `./.tmp/` is in `.gitignore`, so it won't pollute the repo.
 
-## Rule 3: Install missing packages in the working directory if needed
+## Rule 3: Install missing packages inside `./.tmp/` if needed
 
-If a required package is missing, install it in the current working directory — never in `/tmp` or a global location.
+If a required package is missing, install it inside `./.tmp/` — never in `/tmp`, globally, or anywhere outside cwd. Create `./.tmp/` first if it doesn't exist (`mkdir -p .tmp`).
 
-- **For Python**: create a virtual environment in cwd first if one doesn't exist (`python3 -m venv .venv`), activate it (`source .venv/bin/activate`), then run `pip install <pkg>`.
-- **For Node**: run `npm install <pkg>` inside cwd so the package lands in the local `node_modules/`.
-- **MUST NOT**: install packages globally or outside cwd.
+- **For Python**: create a virtual environment at `./.tmp/.venv` (`python3 -m venv .tmp/.venv`), activate it (`source .tmp/.venv/bin/activate`), then run `pip install <pkg>`. Write and run any Python scripts inside `./.tmp/` as well.
+- **For Node**: run `npm install <pkg>` inside `./.tmp/` so the package lands in `./.tmp/node_modules/`. Write and run any Node scripts inside `./.tmp/`.
+- **MUST NOT**: install packages globally, in `/tmp`, or anywhere outside `./.tmp/`.
