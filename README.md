@@ -5,7 +5,7 @@ A skill that gives your agents a pre-built map of indexed websites so they can n
 ## Quick Install
 
 ```bash
-npx skills install RuoxiQin/website-operation-skill
+npx skills add RuoxiQin/website-operation-skill
 ```
 
 Or to install for specific agents:

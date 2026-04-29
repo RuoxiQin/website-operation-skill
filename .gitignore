@@ -8,3 +8,5 @@ hn-comments.png
 .tmp/
 
 .DS_Store
+.claude
+skills-lock.json
