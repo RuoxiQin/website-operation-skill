@@ -11,6 +11,6 @@
   {
     "name": "anthropic-find-latest-blog-content",
     "prompt": "Please find me all the articles/posts by Anthropic on 4/8/2026, and then generate a digest HTML that contains all the articles. Store the HTML in ./.tmp.",
-    "golden_answer": "1. `Scaling Managed Agents: Decoupling the brain from the hands` from `Engineering Blog`. 2. `Claude Managed Agents: get to production 10x faster` from `Claude.com Blog`. 3. `How Carta Healthcare gets AI to reason like a clinical abstractor` from `Anthropic Blog`."
+    "golden_answer": "1. `Scaling Managed Agents: Decoupling the brain from the hands` from `Engineering Blog`. 2. `Claude Managed Agents: get to production 10x faster` from `Claude.com Blog`. 3. `How Carta Healthcare gets AI to reason like a clinical abstractor` from `Anthropic Blog`. 4. `Claude Managed Agents in Public Beta` from `https://platform.claude.com/docs/en/release-notes/overview`. 5. `ant CLI` from `https://platform.claude.com/docs/en/release-notes/overview`."
   }
 ]
