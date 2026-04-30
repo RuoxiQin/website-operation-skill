@@ -2,10 +2,12 @@
 alignment.anthropic.py
 
 A utility script to fetch and parse the Alignment Science Blog (https://alignment.anthropic.com/).
-It extracts interpretability and alignment research notes, converting them 
+It extracts interpretability and alignment research notes, converting them
 into a clean Markdown list with absolute URLs.
 
-Requires: beautifulsoup4
+Requires: beautifulsoup4, playwright
+  pip install beautifulsoup4 playwright
+  playwright install chromium
 
 Usage:
     python3 scripts/alignment.anthropic.py [output_path]
@@ -13,7 +15,7 @@ Usage:
 If output_path is not provided, it defaults to .tmp/alignment_anthropic.md
 """
 
-import urllib.request
+from fetch import fetch_html
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import sys
@@ -27,13 +29,10 @@ except ImportError:
 def main():
     base_url = "https://alignment.anthropic.com/"
     output_path = sys.argv[1] if len(sys.argv) > 1 else ".tmp/alignment_anthropic.md"
-    
-    req = urllib.request.Request(base_url, headers={'User-Agent': 'Mozilla/5.0'})
-    
+
     try:
         print(f"Fetching {base_url}...")
-        with urllib.request.urlopen(req) as response:
-            html = response.read().decode('utf-8')
+        html = fetch_html(base_url)
             
         print("Preprocessing HTML...")
         soup = BeautifulSoup(html, "html.parser")

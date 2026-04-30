@@ -1,12 +1,14 @@
 """
 claude.release-notes.py
 
-A utility script to fetch and parse the Claude Platform Release Notes 
+A utility script to fetch and parse the Claude Platform Release Notes
 (https://docs.anthropic.com/en/release-notes/overview).
-It extracts the release dates and associated updates, converting them 
+It extracts the release dates and associated updates, converting them
 into a clean Markdown list with absolute URLs.
 
-Requires: beautifulsoup4, markdownify
+Requires: beautifulsoup4, markdownify, playwright
+  pip install beautifulsoup4 markdownify playwright
+  playwright install chromium
 
 Usage:
     python3 scripts/claude.release-notes.py [output_path]
@@ -14,7 +16,7 @@ Usage:
 If output_path is not provided, it defaults to .tmp/claude_release_notes.md
 """
 
-import urllib.request
+from fetch import fetch_html
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import sys
@@ -31,13 +33,10 @@ def main():
     base_url = "https://docs.anthropic.com"
     url = f"{base_url}/en/release-notes/overview"
     output_path = sys.argv[1] if len(sys.argv) > 1 else ".tmp/claude_release_notes.md"
-    
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    
+
     try:
         print(f"Fetching {url}...")
-        with urllib.request.urlopen(req) as response:
-            html = response.read().decode('utf-8')
+        html = fetch_html(url)
             
         print("Preprocessing HTML...")
         soup = BeautifulSoup(html, "html.parser")

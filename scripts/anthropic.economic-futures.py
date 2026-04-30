@@ -2,11 +2,13 @@
 anthropic.economic-futures.py
 
 A utility script to fetch and parse the Anthropic Economic Futures blog (https://www.anthropic.com/economic-futures).
-It cleans up the HTML by removing images and SVGs, correctly formats nested Markdown headings 
-inside anchor tags, and converts all relative links into absolute URLs. 
+It cleans up the HTML by removing images and SVGs, correctly formats nested Markdown headings
+inside anchor tags, and converts all relative links into absolute URLs.
 The cleaned content is then converted to Markdown and saved to a file.
 
-Requires: beautifulsoup4, markdownify
+Requires: beautifulsoup4, markdownify, playwright
+  pip install beautifulsoup4 markdownify playwright
+  playwright install chromium
 
 Usage:
     python3 scripts/anthropic.economic-futures.py [output_path]
@@ -14,7 +16,7 @@ Usage:
 If output_path is not provided, it defaults to .tmp/anthropic_economic_futures.md
 """
 
-import urllib.request
+from fetch import fetch_html
 from urllib.parse import urljoin
 import sys
 
@@ -29,13 +31,10 @@ def main():
     base_url = "https://www.anthropic.com"
     url = f"{base_url}/economic-futures"
     output_path = sys.argv[1] if len(sys.argv) > 1 else ".tmp/anthropic_economic_futures.md"
-    
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    
+
     try:
         print(f"Fetching {url}...")
-        with urllib.request.urlopen(req) as response:
-            html = response.read().decode('utf-8')
+        html = fetch_html(url)
             
         print("Preprocessing HTML...")
         soup = BeautifulSoup(html, "html.parser")

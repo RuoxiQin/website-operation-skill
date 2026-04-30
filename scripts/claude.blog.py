@@ -7,7 +7,9 @@ screen-reader-only elements that translate poorly to raw Markdown, this script
 extracts the semantic information directly from the DOM and constructs a clean
 Markdown index of the blog categories and recent posts.
 
-Requires: beautifulsoup4
+Requires: beautifulsoup4, playwright
+  pip install beautifulsoup4 playwright
+  playwright install chromium
 
 Usage:
     python3 scripts/claude.blog.py [output_path]
@@ -15,7 +17,7 @@ Usage:
 If output_path is not provided, it defaults to .tmp/claude_blog.md
 """
 
-import urllib.request
+from fetch import FetchSession
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import sys
@@ -30,37 +32,36 @@ def main():
     base_url = "https://claude.com"
     url = f"{base_url}/blog"
     output_path = sys.argv[1] if len(sys.argv) > 1 else ".tmp/claude_blog.md"
-    
+
     try:
         current_url = url
         items = []
         unique_cats = []
         seen_cats = set()
-        
-        while current_url:
-            print(f"Fetching {current_url}...")
-            req = urllib.request.Request(current_url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req) as response:
-                html = response.read().decode('utf-8')
-                
-            soup = BeautifulSoup(html, "html.parser")
-            
-            # Extract blog items and add to our cumulative list
-            items.extend(soup.find_all('div', class_='blog_cms_item'))
-            
-            # Extract category links (only needed from the first page, but deduped anyway)
-            for cat in soup.find_all('a', href=lambda href: href and '/blog/category/' in href):
-                name, link = cat.text.strip(), urljoin(base_url, cat.get('href'))
-                if link not in seen_cats and name:
-                    seen_cats.add(link)
-                    unique_cats.append((name, link))
-                    
-            # Check for the "View more" next page link
-            next_button = soup.find('a', class_='w-pagination-next')
-            if next_button and next_button.get('href'):
-                current_url = urljoin(url, next_button.get('href'))
-            else:
-                current_url = None
+
+        with FetchSession() as session:
+            while current_url:
+                print(f"Fetching {current_url}...")
+                html = session.fetch(current_url)
+
+                soup = BeautifulSoup(html, "html.parser")
+
+                # Extract blog items and add to our cumulative list
+                items.extend(soup.find_all('div', class_='blog_cms_item'))
+
+                # Extract category links (only needed from the first page, but deduped anyway)
+                for cat in soup.find_all('a', href=lambda href: href and '/blog/category/' in href):
+                    name, link = cat.text.strip(), urljoin(base_url, cat.get('href'))
+                    if link not in seen_cats and name:
+                        seen_cats.add(link)
+                        unique_cats.append((name, link))
+
+                # Check for the "View more" next page link
+                next_button = soup.find('a', class_='w-pagination-next')
+                if next_button and next_button.get('href'):
+                    current_url = urljoin(url, next_button.get('href'))
+                else:
+                    current_url = None
                 
         print("Extracting blog metadata and posts...")
                 

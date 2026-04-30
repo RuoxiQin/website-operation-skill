@@ -10,3 +10,6 @@ hn-comments.png
 .DS_Store
 .claude
 skills-lock.json
+
+__pycache__/
+*.pyc
