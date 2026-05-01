@@ -30,7 +30,7 @@ except ImportError:
 
 def main():
     base_url = "https://claude.com"
-    url = f"{base_url}/blog"
+    url = f"{base_url}/blog/"
     output_path = sys.argv[1] if len(sys.argv) > 1 else ".tmp/claude_blog.md"
 
     try:
@@ -59,7 +59,8 @@ def main():
                 # Check for the "View more" next page link
                 next_button = soup.find('a', class_='w-pagination-next')
                 if next_button and next_button.get('href'):
-                    current_url = urljoin(url, next_button.get('href'))
+                    # Always join against the blog base URL
+                    current_url = urljoin("https://claude.com/blog/", next_button.get('href'))
                 else:
                     current_url = None
                 
